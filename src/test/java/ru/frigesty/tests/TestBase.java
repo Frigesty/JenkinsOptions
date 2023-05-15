@@ -17,16 +17,19 @@ public class TestBase {
     static void beforeAll() {
         String wdHost = System.getProperty("wd", "selenoid.autotests");
         String getWdHost = format("https://user1:1234@%s/wd/hub", wdHost);
+        String[] browser = System.getProperty("browser").split(":");
         DesiredCapabilities capabilities = new DesiredCapabilities();
 
-        Configuration.browserSize = "1920x1080";
-        Configuration.pageLoadStrategy = "eager";
-        Configuration.baseUrl = "https://demoqa.com";
-        Configuration.holdBrowserOpen = false;
+        Configuration.browserSize = System.getProperty("browserSize", "1920x1080");
+        Configuration.pageLoadStrategy = System.getProperty("loadStrategy", "eager");
+        Configuration.baseUrl = System.getProperty("baseUrl", "");
+        Configuration.holdBrowserOpen = Boolean.parseBoolean(System.getProperty("holdBrowser", "false"));
         Configuration.remote = getWdHost;
         capabilities.setCapability("enableVNC", true);
         capabilities.setCapability("enableVideo", true);
         Configuration.browserCapabilities = capabilities;
+        Configuration.browser = browser[0];
+        Configuration.browserVersion = browser[1];
     }
     @BeforeEach
     void addListener() {
