@@ -9,16 +9,21 @@ import org.junit.jupiter.api.BeforeEach;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import ru.frigesty.helpers.Attach;
 
+import static java.lang.String.format;
+
 public class TestBase {
 
     @BeforeAll
     static void beforeAll() {
+        String wdHost = System.getProperty("wd", "selenoid.autotests");
+        String getWdHost = format("https://user1:1234@%s/wd/hub", wdHost);
+        DesiredCapabilities capabilities = new DesiredCapabilities();
+
         Configuration.browserSize = "1920x1080";
         Configuration.pageLoadStrategy = "eager";
         Configuration.baseUrl = "https://demoqa.com";
         Configuration.holdBrowserOpen = false;
-        Configuration.remote = "https://user1:1234@selenoid.autotests.cloud/wd/hub";
-        DesiredCapabilities capabilities = new DesiredCapabilities();
+        Configuration.remote = getWdHost;
         capabilities.setCapability("enableVNC", true);
         capabilities.setCapability("enableVideo", true);
         Configuration.browserCapabilities = capabilities;
